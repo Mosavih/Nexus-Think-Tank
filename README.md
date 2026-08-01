@@ -72,7 +72,7 @@ SECTION 3: INFORMATION MODEL
 
 CORE OBJECTS
 
-Source-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Source-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 A Source describes where information originates, not what happened.
 Examples: Reuters, ISNA, Central Bank of Iran, Parliament website, Telegram channel, X account, Government report, Academic paper
@@ -120,7 +120,7 @@ Update frequency
 Status
 (active/inactive)
 
-Evidence-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Evidence---------------------------------------------------------------------------------------------------------------------------------------------------
 
 Evidence represents a single observed piece of information exactly as obtained from a source.
 
@@ -169,7 +169,7 @@ Hash
 
 Processing status
 
-Event--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Event------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Multiple Evidence objects can describe one Event.
 
@@ -224,7 +224,7 @@ Category
 
 Status
 
-Entity-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Entity-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 Entities are stable things.
 
@@ -256,7 +256,7 @@ Importance
 
 Confidence
 
-Analysis Record----------------------------------------------------------------------------------------------------------------------------------------------------
+Analysis Record---------------------------------------------------------------------------------------------------------------------------------------------
 
 An Analysis Record should never overwrite reality.
 
@@ -293,7 +293,7 @@ Confidence
 
 Forecast IDs
 
-Forecast-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Forecast---------------------------------------------------------------------------------------------------------------------------------------------------
 
 A Forecast should answer
 
@@ -323,7 +323,7 @@ Deadline
 
 3 months
 
-Knowledge----------------------------------------------------------------------------------------------------------------------------------------------------------
+Knowledge-------------------------------------------------------------------------------------------------------------------------------------------------
 
 Knowledge should instead represent validated relationships about how the system believes the world works.
 
@@ -382,6 +382,54 @@ Contradicting evidence
 
 Status
 
+
+OBJECT LIFECYCLE*
+
+```mermaid
+flowchart TD
+    A[New article appears]
+    B{Source already known?}
+    C[Create Source]
+    D[Evidence created]
+    E{Duplicate?}
+    F[Discard duplicate]
+    G{Existing Event?}
+    H[Update Event]
+    I[Create Event]
+    J[Link Entities]
+    K[Knowledge Base Updated]
+    L{Need Analysis?}
+    M[Analysis Generated]
+    N[Human Review]
+    O[Publication]
+    P[Forecast Stored]
+    Q[Reality Unfolds]
+    R[Evaluation]
+    S[Knowledge Updated]
+
+    A --> B
+    B -- No --> C
+    B -- Yes --> D
+    C --> D
+    D --> E
+    E -- Yes --> F
+    E -- No --> G
+    G -- Yes --> H
+    G -- No --> I
+    H --> J
+    I --> J
+    J --> K
+    K --> L
+    L -- Yes --> M
+    L -- No --> Q
+    M --> N
+    N --> O
+    O --> P
+    P --> Q
+    Q --> R
+    R --> S
+```
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SECTION 4: AGENT TAXONOMY AND REPOSITORIES
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -392,81 +440,6 @@ SECTION 4: AGENT TAXONOMY AND REPOSITORIES
 SECTION 5: TECHNOLOGY MAPPING
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-######
-
-EVENTS should contain:
-
-ID
-
-Date
-
-Summary
-
-Evidence
-
-Entities
-
-Location
-
-Importance
-
-Confidence
-
-#####
-
-Every published analysis should be stored with [analysis record] fields such as:
-
-Question addressed (e.g., "Will energy shortages worsen this summer?")
-Evidence used (links to the underlying structured events)
-Key claims
-Forecasts, each with explicit probabilities or confidence levels
-Underlying assumptions
-Publication date
-Evaluation status (pending, partially confirmed, contradicted, confirmed)
-Post-hoc assessment explaining why the prediction succeeded or failed
-
-#####
 
 
 
-
-#####
-
-EACH OBJECT HAS A LIFECYCLE
-
-Evidence
-
-Created by:
-Collector
-
-Modified by:
-Nobody
-
-Deleted?
-Never
-
--------------------
-
-Analysis
-
-Created by:
-Analyst Agent
-
-Modified by:
-Human
-
-Archived?
-Yes
-
--------------------
-
-Forecast
-
-Created by:
-Forecast Agent
-
-Updated?
-Never
-
-Evaluated?
-After outcome
