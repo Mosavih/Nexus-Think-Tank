@@ -383,7 +383,7 @@ Contradicting evidence
 Status
 
 
-OBJECT LIFECYCLE*
+#OBJECT LIFECYCLE
 
 ```mermaid
 flowchart TD
