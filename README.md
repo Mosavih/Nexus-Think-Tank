@@ -1,6 +1,6 @@
 # Nexus-Think-Tank
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SECTION 1: VISION AND INFORMATION FLOW
+#  SECTION 1: VISION AND INFORMATION FLOW
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 This project aims to develop a semi-automated self-improving system that provides financial, political, military, governance, and technology analyses and forecasts (posts). Relevant data will be extracted and saved in the database in a structured format. Specialized agents will subsequently use the data to provide posts. Each post will be saved in the database with a dedicated identifier. New evidence (data) will validate the previous posts, and their status will be updated, turning them into knowledge. The knowledge will be used to improve the performance of various agents.
@@ -51,8 +51,6 @@ Knowledge Base updated
 SECTION 2: DESIGN REQUIREMENTS
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-DESIGN REQUIREMENTS
-
 | ID  | Requirement                                             | Why it matters                                |
 | --- | ------------------------------------------------------- | --------------------------------------------- |
 | R1  | Continuously collect information from diverse sources   | Avoid manual monitoring                       |
@@ -67,12 +65,12 @@ DESIGN REQUIREMENTS
 | R10 | Minimize daily human effort                             | Respect your 30–60 minute time budget         |
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SECTION 3: INFORMATION MODEL
+#  SECTION 3: INFORMATION MODEL
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CORE OBJECTS
+##  3.1 CORE OBJECTS
 
-Source-----------------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.1 Source
 
 A Source describes where information originates, not what happened.
 Examples: Reuters, ISNA, Central Bank of Iran, Parliament website, Telegram channel, X account, Government report, Academic paper
@@ -87,40 +85,33 @@ How trustworthy is it?
 What type of source is it?
 How frequently should it be checked?
 
-Attributes: 
+**Attributes**
 
-Source
+- Source
 
-ID
+- ID
 
-Name
+- Name
 
-Type
-(news agency,
-government,
-social media,
-database,
-research)
+- Type(news agency, government, social media, database, research)
 
-Language
+- Language
 
-Country
+- Country
 
-URL
+- URL
 
-Reliability score
+- Reliability score
 
-Political affiliation (optional)
+- Political affiliation (optional)
 
-Collection method
-(RSS, API, scraping)
+- Collection method (RSS, API, scraping)
 
-Update frequency
+- Update frequency
 
-Status
-(active/inactive)
+- Status (active/inactive)
 
-Evidence---------------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.2 Evidence
 
 Evidence represents a single observed piece of information exactly as obtained from a source.
 
@@ -141,35 +132,35 @@ Who reported it?
 When?
 How confident are we that the source reported this?
 
-Attributes:
+**Attributes**
 
-Evidence
+- Evidence
 
-ID
+- ID
 
-Source
+- Source
 
-Collection time
+- Collection time
 
-Publication time
+- Publication time
 
-Original title
+- Original title
 
-Original text
+- Original text
 
-Original URL
+- Original URL
 
-Language
+- Language
 
-Media type
+- Media type
 
-Confidence
+- Confidence
 
-Hash
+- Hash
 
-Processing status
+- Processing status
 
-Event------------------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.3 Event
 
 Multiple Evidence objects can describe one Event.
 
@@ -197,34 +188,35 @@ Where?
 When?
 Who was involved?
 
-Attributes:
-Event
+**Attributes**
 
-ID
+- Event
 
-Title
+- ID
 
-Summary
+- Title
 
-Start time
+- Summary
 
-End time
+- Start time
 
-Location
+- End time
 
-Importance
+- Location
 
-Confidence
+- Importance
 
-Evidence IDs
+- Confidence
 
-Entity IDs
+- Evidence IDs
 
-Category
+- Entity IDs
 
-Status
+- Category
 
-Entity-----------------------------------------------------------------------------------------------------------------------------------------------------
+- Status
+
+###  3.1.4 Entity
 
 Entities are stable things.
 
@@ -236,27 +228,27 @@ Organizations
 
 Companies
 
-Attributes:
+**Attributes**
 
-Entity
+- Entity
 
-ID
+- ID
 
-Name
+- Name
 
-Type
+- Type
 
-Aliases
+- Aliases
 
-Description
+- Description
 
-Relationships
+- Relationships
 
-Importance
+- Importance
 
-Confidence
+- Confidence
 
-Analysis Record---------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.5 Analysis Record
 
 An Analysis Record should never overwrite reality.
 
@@ -266,34 +258,33 @@ Instead it represents
 given this evidence,
 this analyst believes..."
 
-Attributes:
+**Attributes**
 
-Analysis Record
+- Analysis Record
 
-ID
+- ID
 
-Question
+- Question
 
-Author
-(agent or human)
+- Author (agent or human)
 
-Date
+- Date
 
-Evidence used
+- Evidence used
 
-Assumptions
+- Assumptions
 
-Reasoning chain
+- Reasoning chain
 
-Claims
+- Claims
 
-Alternative hypotheses
+- Alternative hypotheses
 
-Confidence
+- Confidence
 
-Forecast IDs
+- Forecast IDs
 
-Forecast---------------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.6 Forecast
 
 A Forecast should answer
 
@@ -323,7 +314,7 @@ Deadline
 
 3 months
 
-Knowledge-------------------------------------------------------------------------------------------------------------------------------------------------
+###  3.1.7 Knowledge
 
 Knowledge should instead represent validated relationships about how the system believes the world works.
 
@@ -358,32 +349,32 @@ Knowledge is
 
 "Historically, sanctions tend to produce X under conditions Y."
 
-Attributes:
+**Attributes**
 
-Knowledge
+- Knowledge
 
-ID
+- ID
 
-Statement
+- Statement
 
-Supporting analyses
+- Supporting analyses
 
-Supporting forecasts
+- Supporting forecasts
 
-Supporting events
+- Supporting events
 
-Supporting evidence
+- Supporting evidence
 
-Confidence
+- Confidence
 
-Last updated
+- Last updated
 
-Contradicting evidence
+- Contradicting evidence
 
-Status
+- Status
 
 
-#OBJECT LIFECYCLE
+##  3.2 OBJECT LIFECYCLE
 
 ```mermaid
 flowchart TD
@@ -429,6 +420,10 @@ flowchart TD
     Q --> R
     R --> S
 ```
+
+##  3.3 Decision Gates
+
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SECTION 4: AGENT TAXONOMY AND REPOSITORIES
