@@ -423,7 +423,274 @@ flowchart TD
 
 ##  3.3 Decision Gates
 
+###  Gate 1 — Collection Gate
 
+Question:
+Should this information even enter our system?
+
+Inputs:
+- Source
+- Retrieved content
+
+Possible outputs:
+- Accept
+- Reject
+- Archive
+
+Decision criteria:
+- Is the source trusted?
+- Is the content accessible?
+- Is it within our scope?
+- Is it spam?
+
+###  Gate 2 — Evidence Gate
+
+Question:
+Is this evidence sufficiently reliable?
+
+Inputs:
+- Raw article
+- Source metadata
+
+Outputs:
+- Evidence object
+- Rejected evidence
+
+Criteria:
+- Successful parsing?
+- Complete?
+- Confidence above threshold?
+
+###  Gate 3 — Event Gate
+
+Question:
+Does this evidence describe a new event?
+
+Possible outputs:
+- New Event
+- Existing Event
+- Multiple Events
+
+This is essentially an entity resolution problem.
+
+###  Gate 4 — Priority Gate
+
+Question:
+Which events deserve attention?
+- Pipeline collects
+- 350 news articles
+- 95 events
+
+Analysts cannot read 95 events every day.
+
+The system needs to rank them.
+
+Possible criteria:
+- Novelty
+- Importance
+- Confidence
+- Potential downstream impact
+- Number of affected domains
+- Financial significance
+
+Output:
+Critical
+
+↓
+
+High
+
+↓
+
+Medium
+
+↓
+
+Low
+
+###  Gate 5 — Routing Gate
+
+Question:
+Which specialists should receive this event?
+- Economic Agent
+- Political Agent
+- Military Agent
+- Technology Agent
+- Governance Agent
+
+Not every event goes to every analyst.
+
+###  Gate 6 — Claim Gate
+
+Question:
+Should this analysis become an official claim?
+
+Because not every LLM output deserves to become part of the institutional memory.
+
+This gate could include:
+- Critic Agent
+- Cross-agent agreement
+- Confidence estimation
+
+###  Gate 7 — Publication Gate
+
+Question
+
+Where should this go?
+
+Possibilities:
+- Internal knowledge only
+- Telegram
+- Weekly report
+- Monthly report
+- Think tank archive
+
+###  Gate 8 — Learning Gate
+
+This is the gate that excites me most.
+
+Question,
+
+Reality has unfolded.
+
+Now what?
+
+Possible outcomes:
+- Forecast confirmed
+- Forecast partially confirmed
+- Forecast contradicted
+
+Then
+
+Update:
+- Knowledge
+- Forecast calibration
+- Agent reliability
+- Historical patterns
+
+This is what makes the system adaptive.
+
+##  3.4 Confidence Framework
+
+| Object    | Confidence means                                      |
+| --------- | ----------------------------------------------------- |
+| Source    | Historical trustworthiness                            |
+| Evidence  | Confidence that the extraction is correct             |
+| Event     | Confidence that this event representation is accurate |
+| Analysis  | Confidence in the reasoning and conclusions           |
+| Forecast  | Estimated probability of occurrence                   |
+| Knowledge | Strength of accumulated supporting evidence           |
+
+**Information Flow Diagram**
+
+```mermaid
+flowchart TD
+
+    %% ========= Reality =========
+    A([Reality])
+
+    %% ========= Sources =========
+    A --> B[Information Sources]
+
+    %% ========= Gate 1 =========
+    B --> G1{"Gate 1<br/>Collection"}
+    G1 -->|Accepted| C[Source]
+    G1 -->|Rejected| X1[(Discard)]
+
+    %% ========= Evidence =========
+    C --> D[Evidence Collection]
+    D --> E[Evidence]
+
+    %% ========= Gate 2 =========
+    E --> G2{"Gate 2<br/>Evidence Validation"}
+    G2 -->|Valid| F[Validated Evidence]
+    G2 -->|Invalid| X2[(Archive)]
+
+    %% ========= Events =========
+    F --> G3{"Gate 3<br/>Event Resolution"}
+
+    G3 -->|Existing Event| H[Update Event]
+    G3 -->|New Event| I[Create Event]
+
+    H --> J[Event]
+    I --> J
+
+    %% ========= Entities =========
+    J --> K[Entity Linking]
+    K --> L[Entities]
+
+    %% ========= Knowledge Base =========
+    J --> KB
+    L --> KB
+
+    subgraph KB["Knowledge Base"]
+        direction TB
+
+        EL["Evidence Layer<br/>(Immutable observations)"]
+
+        AL["Analytical Layer<br/>(Analysis Records<br/>Forecasts<br/>Claims)"]
+
+        KL["Knowledge Layer<br/>(Validated patterns<br/>relationships<br/>lessons learned)"]
+
+        EL --> AL
+        AL --> KL
+    end
+
+    %% ========= Priority =========
+    KB --> G4{"Gate 4<br/>Priority"}
+
+    G4 -->|Low| X3[(Knowledge Only)]
+
+    G4 -->|Medium / High| G5{"Gate 5<br/>Routing"}
+
+    %% ========= Specialists =========
+    G5 --> P[Political Analyst]
+    G5 --> Q[Economic Analyst]
+    G5 --> R[Military Analyst]
+    G5 --> S[Science & Technology Analyst]
+    G5 --> T[Governance Analyst]
+
+    %% ========= Analysis =========
+    P --> U[Analysis Record]
+    Q --> U
+    R --> U
+    S --> U
+    T --> U
+
+    %% ========= Critique =========
+    U --> G6{"Gate 6<br/>Claim Validation"}
+
+    G6 --> V[Critic Agent]
+
+    V --> W[Revised Analysis]
+
+    %% ========= Human =========
+    W --> G7{"Gate 7<br/>Human Review"}
+
+    G7 -->|Reject| AL
+
+    G7 -->|Approve| Y[Published Analysis]
+
+    %% ========= Forecast =========
+    Y --> Z[Forecast]
+
+    Z --> AL
+
+    %% ========= Time =========
+    Z --> AA([Time Passes])
+
+    AA --> AB([Reality Unfolds])
+
+    %% ========= Learning =========
+    AB --> G8{"Gate 8<br/>Evaluation"}
+
+    G8 --> AC[Forecast Evaluation]
+
+    AC --> AD[Knowledge Update]
+
+    AD --> KL
+
+```
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SECTION 4: AGENT TAXONOMY AND REPOSITORIES
