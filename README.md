@@ -114,6 +114,7 @@ How frequently should it be checked?
 ###  3.1.2 Evidence
 
 Evidence represents a single observed piece of information exactly as obtained from a source.
+Since it is externally sourced information, it does not have to be true. 
 
 Example
 
@@ -161,6 +162,22 @@ How confident are we that the source reported this?
 - Processing status
 
 ###  3.1.3 Event
+
+An Event is a discrete occurrence that changes one or more states of the world.
+States describe the world at a point in time (exchange rate: 32,000; Inflation: 40%)
+
+Event Examples
+- Election
+- Airstrike
+- Law passed
+- CEO resigns
+- Earthquake
+
+Events have
+- beginning
+- sometimes ending
+- participants
+- location
 
 Multiple Evidence objects can describe one Event.
 
@@ -215,6 +232,30 @@ Who was involved?
 - Category
 
 - Status
+
+Events matter because they produce change.
+
+Example:
+Parliament passes a tax law.
+
+The Event itself isn't particularly useful.
+What matters is the state changes it triggers:
+
+Tax rate
+
+↓
+
+Government revenue
+
+↓
+
+Inflation expectations
+
+↓
+
+Construction costs
+
+Now forecasting becomes possible.
 
 ###  3.1.4 Entity
 
