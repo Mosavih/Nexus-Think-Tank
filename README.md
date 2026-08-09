@@ -72,394 +72,296 @@ SECTION 2: DESIGN REQUIREMENTS
 
 ###  3.1.1 Source
 
-A Source describes where information originates, not what happened.
-Examples: Reuters, ISNA, Central Bank of Iran, Parliament website, Telegram channel, X account, Government report, Academic paper
-The Source says nothing about the event itself.
+A Source describes where information originates. It represents the provider or origin of information, not the information itself and not what happened in the world.
 
-Responsibilities
+Examples:
+- Reuters
+- ISNA
+- Central Bank of Iran
+- Parliament website
+- Telegram channel
+- X account
+- Government report
+- Academic journal
 
 A Source should answer:
-
-Where did this information come from?
-How trustworthy is it?
-What type of source is it?
-How frequently should it be checked?
+- Where did this information come from?
+- How trustworthy is it?
+- How reliable has it historically been?
+- How should it be collected and monitored?
 
 **Attributes**
-
-- Source
-
 - ID
-
 - Name
-
 - Type(news agency, government, social media, database, research)
-
 - Language
-
 - Country
-
 - URL
-
-- Reliability score
-
+- Reliability profile
 - Political affiliation (optional)
-
 - Collection method (RSS, API, scraping)
-
 - Update frequency
-
 - Status (active/inactive)
 
-###  3.1.2 Evidence
+Important: Reliability is a property of the Source and may later be modeled as context-dependent rather than as a single universal score.
 
-Evidence represents a single observed piece of information exactly as obtained from a source.
-Since it is externally sourced information, it does not have to be true. 
+###  3.1.2 Source Artifact
 
-Example
+A Source Artifact is a specific piece of information obtained from a Source.
 
-Reuters reports:
+Examples:
+- Reuters article
+- Government announcement
+- Telegram post
+- X post
+- Academic paper
+- Statistical release
+- Dataset
+- Satellite image
 
-Iran announced the commissioning of two new gas processing facilities.
-
-That article becomes one or more Evidence objects.
-
-Responsibilities
-
-Evidence should answer:
-
-What exactly was observed?
-Who reported it?
-When?
-How confident are we that the source reported this?
+A Source Artifact should answer:
+- What exactly did we retrieve?
+- From which Source?
+- When was it published?
+- When did we collect it?
+- What was its original content?
 
 **Attributes**
-
-- Evidence
-
 - ID
-
-- Source
-
-- Collection time
-
+- Source ID
 - Publication time
-
+- Collection time
 - Original title
-
-- Original text
-
+- Original content
 - Original URL
-
 - Language
-
 - Media type
-
-- Confidence
-
 - Hash
-
 - Processing status
+
+A Source Artifact may contain one or more Source Claims or observations.
 
 ###  3.1.3 Event
 
-An Event is a discrete occurrence that changes one or more states of the world.
-States describe the world at a point in time (exchange rate: 32,000; Inflation: 40%)
+An Event is a discrete occurrence in the world that has occurred or is currently occurring.
 
-Event Examples
+Examples:
 - Election
 - Airstrike
 - Law passed
 - CEO resigns
 - Earthquake
+- Government announcement
+- Agreement signed
 
-Events have
-- beginning
-- sometimes ending
-- participants
-- location
-
-Multiple Evidence objects can describe one Event.
-
-Purpose
-
-Represent one occurrence in reality.
-
-Example
-
-Parliament approved
-the 2027 budget.
-
-That is one Event.
-
-Ten newspapers may describe it differently.
-
-Still one Event.
-
-Responsibilities
-
-An Event should answer
-
-What happened?
-Where?
-When?
-Who was involved?
+An Event should answer:
+- What happened?
+- When?
+- Where?
+- Who or what was involved?
 
 **Attributes**
-
 - Event
-
 - ID
-
 - Title
-
 - Summary
-
 - Start time
-
 - End time
-
 - Location
-
 - Importance
-
 - Confidence
-
 - Evidence IDs
-
 - Entity IDs
-
 - Category
-
 - Status
 
-Events matter because they produce change.
+Multiple independent sources may describe the same Event.
 
-Example:
-Parliament passes a tax law.
+The Event represents the occurrence itself; uncertainty about whether the Event occurred is derived from the available supporting and contradicting information rather than stored as an intrinsic property of the Event.
 
-The Event itself isn't particularly useful.
-What matters is the state changes it triggers:
-
-Tax rate
-
-↓
-
-Government revenue
-
-↓
-
-Inflation expectations
-
-↓
-
-Construction costs
-
-Now forecasting becomes possible.
+Temporal rule: Future occurrences are not Events. A future occurrence is represented as a Claim or Forecast until it actually occurs.
 
 ###  3.1.4 Entity
 
-Entities are stable things.
+An Entity represents a persistent identifiable thing relevant to the system.
 
-Examples
+Examples:
+- Person
+- Organization
+- Company
+- Country
+- Institution
+- Facility
+- Political party
 
-People
-
-Organizations
-
-Companies
+An Entity should answer:
+- What identifiable thing are we referring to?
+- What names or aliases identify it?
+- What type of thing is it?
 
 **Attributes**
-
 - Entity
-
 - ID
-
 - Name
-
 - Type
-
 - Aliases
-
 - Description
-
 - Relationships
-
 - Importance
-
 - Confidence
 
-###  3.1.5 Analysis Record
+Relationships between entities are not yet modeled as a universal first-class object. They may be represented within Events, Claims, Analyses, or other structures when relevant. Explicit relationship modeling can be introduced later if a concrete computational requirement justifies it.
 
-An Analysis Record should never overwrite reality.
+###  3.1.5 Claim
 
+A Claim is a proposition about the world expressed by a Source, analyst, or forecasting system.
+
+Examples:
+- Iran announced the commissioning of two gas-processing facilities.
+- The sanctions are reducing construction imports.
+- Iran is likely to increase oil exports.
+
+Claims may refer to:
+- past or present Events,
+- Measurements,
+- relationships,
+- causal explanations,
+- current conditions,
+- future possibilities.
+
+Claims should preserve their provenance and distinguish between source claims and analytical claims.
+
+**Attributes**
+- ID
+- Proposition
+- Type
+- Author/Source
+- Time
+- Temporal scope
+- Supporting information
+- Contradicting information
+- Status
+- Processing history
+
+A Claim may support, contradict, describe, or interpret an Event, Measurement, Entity, or another Claim.
+
+###  3.1.6 Analysis Record
+
+An Analysis Record represents a structured analytical process conducted by a human or AI system.
 Instead it represents
 
-"At this moment,
-given this evidence,
-this analyst believes..."
+It should answer:
+Given the available information at this point in time, what did the analyst conclude, why, and with what alternatives and uncertainties?
 
 **Attributes**
-
 - Analysis Record
-
 - ID
-
 - Question
-
 - Author (agent or human)
-
 - Date
-
 - Evidence used
-
 - Assumptions
-
 - Reasoning chain
-
 - Claims
-
 - Alternative hypotheses
-
 - Confidence
-
 - Forecast IDs
 
-###  3.1.6 Forecast
+An Analysis Record must not overwrite Events or Source information. It represents an interpretation of the available information at a particular point in time.
 
-A Forecast should answer
+###  3.1.7 Forecast
 
-What?
+A Forecast is a probabilistic claim concerning a future outcome with an explicit resolution condition.
 
-Probability?
-
-Time horizon?
-
-Conditions?
-
-Confidence?
-
-Evaluation status?
-
-Example
-
-Probability
-
-70%
-
-Prediction
-
-Fuel prices increase
-
-Deadline
-
-3 months
-
-###  3.1.7 Knowledge
-
-Knowledge should instead represent validated relationships about how the system believes the world works.
-
-For example:
-Economic sanctions
-
-↓
-
-usually reduce
-
-↓
-
-construction imports
-
-Or
-
-Currency depreciation
-
-↓
-
-often precedes
-
-↓
-
-construction inflation
-
-Knowledge is not
-
-"Sanctions happened."
-
-Knowledge is
-
-"Historically, sanctions tend to produce X under conditions Y."
+A Forecast should answer:
+- What is expected to happen?
+- With what probability?
+- By when?
+- Under what conditions?
+- How will the forecast be evaluated?
 
 **Attributes**
-
-- Knowledge
-
 - ID
+- Prediction
+- Probability
+- Target/horizon
+- Conditions
+- Resolution criteria
+- Date issued
+- Author
+- Supporting Analysis
+- Outcome
+- Evaluation status
+- Evaluation score
 
-- Statement
-
-- Supporting analyses
-
-- Supporting forecasts
-
-- Supporting events
-
-- Supporting evidence
-
-- Confidence
-
-- Last updated
-
-- Contradicting evidence
-
-- Status
-
+A Forecast remains unresolved until its resolution condition is reached. Its eventual outcome is used to evaluate forecasting performance and improve future forecasting.
 
 ##  3.2 OBJECT LIFECYCLE
 
 ```mermaid
 flowchart TD
-    A[New article appears]
+    A[New Source Artifact]
     B{Source already known?}
     C[Create Source]
-    D[Evidence created]
-    E{Duplicate?}
-    F[Discard duplicate]
-    G{Existing Event?}
-    H[Update Event]
-    I[Create Event]
-    J[Link Entities]
-    K[Knowledge Base Updated]
-    L{Need Analysis?}
-    M[Analysis Generated]
-    N[Human Review]
-    O[Publication]
-    P[Forecast Stored]
-    Q[Reality Unfolds]
-    R[Evaluation]
-    S[Knowledge Updated]
+    D[Store Source Artifact]
+    E{Duplicate artifact?}
+    F[Discard / Link duplicate]
+
+    G[Extract Source Claims & Observations]
+    H[Resolve Entities]
+
+    I{Existing Event?}
+    J[Link to Event]
+    K[Create Event]
+
+    L[Store / Update Measurements]
+    M[Store / Update Claims]
+
+    N{Analysis warranted?}
+    O[Generate Analysis]
+    P[Human Review]
+    Q[Publish Analysis]
+    R[Store Forecast]
+
+    S[Monitor Reality]
+    T[New Events / Measurements]
+    U[Evaluate Forecasts]
 
     A --> B
     B -- No --> C
     B -- Yes --> D
     C --> D
+
     D --> E
     E -- Yes --> F
     E -- No --> G
-    G -- Yes --> H
-    G -- No --> I
-    H --> J
-    I --> J
-    J --> K
+
+    G --> H
+    H --> I
+
+    I -- Yes --> J
+    I -- No --> K
+
+    J --> L
     K --> L
-    L -- Yes --> M
-    L -- No --> Q
+    L --> M
+    G --> M
+
     M --> N
-    N --> O
+
+    N -- Yes --> O
+    N -- No --> S
+
     O --> P
     P --> Q
     Q --> R
     R --> S
+
+    S --> T
+    T --> U
+    U --> M
+
+    U -. New analysis input .-> N
 ```
 
 ##  3.3 Decision Gates
@@ -472,6 +374,7 @@ Should this information even enter our system?
 Inputs:
 - Source
 - Retrieved content
+- Collection metadata
 
 Possible outputs:
 - Accept
@@ -479,105 +382,202 @@ Possible outputs:
 - Archive
 
 Decision criteria:
-- Is the source trusted?
-- Is the content accessible?
-- Is it within our scope?
-- Is it spam?
+- Is the source within scope?
+- Is the content accessible and parseable?
+- Is it relevant to the system?
+- Is it spam, duplicated infrastructure content, or otherwise unusable?
+- Does the source meet minimum collection requirements?
 
-###  Gate 2 — Evidence Gate
+Output:
+Accepted Source Artifact
+
+###  Gate 2 — Extraction & Integrity Gate
 
 Question:
-Is this evidence sufficiently reliable?
+Can the system reliably extract usable information from this Source Artifact?
 
 Inputs:
 - Raw article
 - Source metadata
 
-Outputs:
-- Evidence object
-- Rejected evidence
+Possible outputs:
+- Accepted extraction
+- Reprocess
+- Archive/reject
 
-Criteria:
+Checks:
 - Successful parsing?
-- Complete?
-- Confidence above threshold?
+- Content complete?
+- Language identified?
+- Metadata available?
+- Claims/observations extractable?
+- OCR/transcription quality acceptable?
+- Is the artifact corrupted?
 
-###  Gate 3 — Event Gate
+Output:
+Source Claims / Observations
+
+This gate is therefore about information extraction quality, not truth.
+
+###  Gate 3 — Resolution Gate
 
 Question:
-Does this evidence describe a new event?
+What does this information refer to in the existing world model?
+
+Inputs:
+- Source Claims
+- Observations
+- Existing Entities
+- Existing Events
+- Existing Measurements
 
 Possible outputs:
-- New Event
-- Existing Event
-- Multiple Events
+- Link to existing Event
+- Create new Event
+- Create/associate Measurement
+- Link to existing Entity
+- Create new Entity
+- Source Claim only
+- Multiple objects
 
-This is essentially an entity resolution problem.
+This is where entity resolution and event resolution happen.
+
+For example: 
+The Iranian parliament approved the 2027 budget.
+
+The system might resolve:
+
+Entity:
+Iranian Parliament
+
+        +
+
+Event:
+Approval of 2027 budget
+
+        +
+
+Source Claim:
+"Parliament approved..."
+
+But:
+
+"An Iranian official said negotiations are unlikely."
+
+may produce:
+
+Entity:
+Iranian official
+
+Source Claim:
+"Negotiations are unlikely."
+
+No Event.
 
 ###  Gate 4 — Priority Gate
 
 Question:
-Which events deserve attention?
-- Pipeline collects
-- 350 news articles
-- 95 events
+Which information deserves computational and/or human attention?
 
-Analysts cannot read 95 events every day.
-
-The system needs to rank them.
+Analysts cannot read all the data every time, so the system ranks them.
 
 Possible criteria:
 - Novelty
 - Importance
-- Confidence
+- Source quality
 - Potential downstream impact
 - Number of affected domains
 - Financial significance
+- Geographic significance
+- Uncertainty
+- Conflict between sources
+- Relevance to existing forecasts
+- Relevance to ongoing analyses
 
 Output:
 Critical
-
-↓
-
 High
-
-↓
-
 Medium
-
-↓
-
 Low
 
 ###  Gate 5 — Routing Gate
 
 Question:
-Which specialists should receive this event?
-- Economic Agent
-- Political Agent
-- Military Agent
-- Technology Agent
-- Governance Agent
+Which analytical capabilities should process this information?
 
-Not every event goes to every analyst.
+Inputs:
+- Events
+- Claims
+- Measurements
+- Priority
+- Entities
+- Domain relevance
+
+An event can go to multiple specialists.
+
+For example:
+
+Strait of Hormuz disruption could trigger:
+- Military
+- Economic
+- Energy
+- Financial Markets
+- Political
+
+while:
+New Iranian building regulation might trigger:
+- Governance
+- Construction
+- Economics
+
+This gate is particularly important for efficiency because agentic systems become expensive very quickly if everything is sent everywhere.
 
 ###  Gate 6 — Claim Gate
 
 Question:
-Should this analysis become an official claim?
+Has the analytical output earned the right to become an institutional claim?
 
-Because not every LLM output deserves to become part of the institutional memory.
+An agent might produce:
+"The government is probably preparing for capital controls."
 
-This gate could include:
-- Critic Agent
-- Cross-agent agreement
-- Confidence estimation
+That should not automatically become institutional knowledge.
+
+Instead:
+Specialist analyses
+        ↓
+Candidate Claims
+        ↓
+Criticism / verification
+        ↓
+      Gate 6
+
+Possible outputs:
+- Accept Claim
+- Revise
+- Reject
+- Keep as hypothesis
+- Possible criteria
+- Evidence quality
+- Source diversity
+- Contradictory information
+- Cross-agent agreement/disagreement
+- Logical consistency
+- Alternative explanations
+- Historical precedent
+- Model confidence
+- Human expert assessment where necessary
+
+Claim stats could be represented using: 
+- Candidate
+- Accepted
+- Contested
+- Rejected
+- Superseded
 
 ###  Gate 7 — Publication Gate
 
-Question
-
-Where should this go?
+Question:
+Does this output deserve external publication, and if so, where?
 
 Possibilities:
 - Internal knowledge only
@@ -586,150 +586,172 @@ Possibilities:
 - Monthly report
 - Think tank archive
 
+importantly:
+Claim acceptance ≠ publication.
+
+A claim might be accepted internally but still be unsuitable for public publication because:
+- insufficient novelty,
+- sensitive information,
+- low confidence,
+- audience mismatch,
+- poor explanatory quality.
+
 ###  Gate 8 — Learning Gate
 
-This is the gate that excites me most.
+Question:
+How did reality compare with what the system previously believed or predicted?
 
-Question,
-
-Reality has unfolded.
-
-Now what?
+Inputs:
+- Forecasts
+- Subsequent Events
+- Measurements
+- New Claims
+- Evaluations
 
 Possible outcomes:
-- Forecast confirmed
-- Forecast partially confirmed
-- Forecast contradicted
+- Confirmed
+- Partially confirmed
+- Contradicted
+- Unresolved
+- Expired
 
-Then
-
-Update:
-- Knowledge
+Then the system can update:
 - Forecast calibration
-- Agent reliability
+- Source reliability estimates
+- Agent/domain performance
+- Analytical assumptions
 - Historical patterns
+- Retrieval priorities
+- Future model inputs
 
-This is what makes the system adaptive.
+```mermaid
+flowchart TD
+    A[Source Artifact]
+    
+    G1{{Gate 1<br/>Collection}}
+    G2{{Gate 2<br/>Extraction & Integrity}}
+    G3{{Gate 3<br/>Resolution}}
+    G4{{Gate 4<br/>Priority}}
+    G5{{Gate 5<br/>Routing}}
+    G6{{Gate 6<br/>Claim}}
+    G7{{Gate 7<br/>Publication}}
+    G8{{Gate 8<br/>Learning}}
 
-##  3.4 Confidence Framework
+    B[Source Claims / Observations]
+    C[Events / Measurements / Entities / Claims]
+    D[Prioritized Information]
+    E[Specialist Analysis]
+    F[Candidate Claims / Forecasts]
+    H[Published Output]
+    I[Evaluated Outcomes]
 
-| Object    | Confidence means                                      |
-| --------- | ----------------------------------------------------- |
-| Source    | Historical trustworthiness                            |
-| Evidence  | Confidence that the extraction is correct             |
-| Event     | Confidence that this event representation is accurate |
-| Analysis  | Confidence in the reasoning and conclusions           |
-| Forecast  | Estimated probability of occurrence                   |
-| Knowledge | Strength of accumulated supporting evidence           |
+    A --> G1
+    G1 --> G2
+    G2 --> B
+    B --> G3
+    G3 --> C
+    C --> G4
+    G4 --> D
+    D --> G5
+    G5 --> E
+    E --> F
+    F --> G6
+    G6 --> G7
+    G7 --> H
+    F --> G8
+    H --> G8
+    I --> G8
+    G8 --> C
+    G8 --> G5
+
+```
 
 **Information Flow Diagram**
 
 ```mermaid
 flowchart TD
 
-    %% ========= Reality =========
-    A([Reality])
+    R([Reality])
 
-    %% ========= Sources =========
-    A --> B[Information Sources]
+    R --> S1[Events / Conditions / Measurements]
 
-    %% ========= Gate 1 =========
-    B --> G1{"Gate 1<br/>Collection"}
-    G1 -->|Accepted| C[Source]
-    G1 -->|Rejected| X1[(Discard)]
+    S1 --> S2[Observed by imperfect sources]
 
-    %% ========= Evidence =========
-    C --> D[Evidence Collection]
-    D --> E[Evidence]
+    S2 --> G1{"Gate 1<br/>Collection"}
 
-    %% ========= Gate 2 =========
-    E --> G2{"Gate 2<br/>Evidence Validation"}
-    G2 -->|Valid| F[Validated Evidence]
-    G2 -->|Invalid| X2[(Archive)]
+    G1 -->|Accept| A[Source Artifact]
+    G1 -->|Reject| X[(Discard / Archive)]
 
-    %% ========= Events =========
-    F --> G3{"Gate 3<br/>Event Resolution"}
+    A --> G2{"Gate 2<br/>Extraction & Integrity"}
 
-    G3 -->|Existing Event| H[Update Event]
-    G3 -->|New Event| I[Create Event]
+    G2 -->|Usable| B[Source Claims & Observations]
+    G2 -->|Unusable| Y[(Archive / Reprocess)]
 
-    H --> J[Event]
-    I --> J
+    B --> G3{"Gate 3<br/>Resolution"}
 
-    %% ========= Entities =========
-    J --> K[Entity Linking]
-    K --> L[Entities]
+    G3 --> C[Entities]
+    G3 --> D[Events]
+    G3 --> E[Measurements]
+    G3 --> F[Claims]
 
-    %% ========= Knowledge Base =========
-    J --> KB
-    L --> KB
-
-    subgraph KB["Knowledge Base"]
+    subgraph KB["Structured Information Base"]
         direction TB
-
-        EL["Evidence Layer<br/>(Immutable observations)"]
-
-        AL["Analytical Layer<br/>(Analysis Records<br/>Forecasts<br/>Claims)"]
-
-        KL["Knowledge Layer<br/>(Validated patterns<br/>relationships<br/>lessons learned)"]
-
-        EL --> AL
-        AL --> KL
+        C
+        D
+        E
+        F
     end
 
-    %% ========= Priority =========
     KB --> G4{"Gate 4<br/>Priority"}
 
-    G4 -->|Low| X3[(Knowledge Only)]
-
+    G4 -->|Low| M[(Retain / Monitor)]
     G4 -->|Medium / High| G5{"Gate 5<br/>Routing"}
 
-    %% ========= Specialists =========
-    G5 --> P[Political Analyst]
-    G5 --> Q[Economic Analyst]
-    G5 --> R[Military Analyst]
-    G5 --> S[Science & Technology Analyst]
-    G5 --> T[Governance Analyst]
+    G5 --> P[Political]
+    G5 --> Q[Economic]
+    G5 --> R2[Military]
+    G5 --> S[Science & Technology]
+    G5 --> T[Governance]
 
-    %% ========= Analysis =========
     P --> U[Analysis Record]
     Q --> U
-    R --> U
+    R2 --> U
     S --> U
     T --> U
 
-    %% ========= Critique =========
-    U --> G6{"Gate 6<br/>Claim Validation"}
+    U --> G6{"Gate 6<br/>Claim"}
 
-    G6 --> V[Critic Agent]
+    G6 -->|Revise / Reject| V[Critique]
+    V --> U
 
-    V --> W[Revised Analysis]
+    G6 -->|Accepted| W[Accepted Claims]
 
-    %% ========= Human =========
-    W --> G7{"Gate 7<br/>Human Review"}
+    U --> Z[Forecast]
+    W --> Z
 
-    G7 -->|Reject| AL
+    W --> G7{"Gate 7<br/>Publication"}
 
-    G7 -->|Approve| Y[Published Analysis]
+    G7 -->|Internal| I[(Internal)]
+    G7 -->|External| J[Published Analysis]
 
-    %% ========= Forecast =========
-    Y --> Z[Forecast]
+    Z --> K([Time Passes])
 
-    Z --> AL
+    K --> R
 
-    %% ========= Time =========
-    Z --> AA([Time Passes])
+    R --> L[New Observations]
 
-    AA --> AB([Reality Unfolds])
+    L --> G8{"Gate 8<br/>Learning"}
 
-    %% ========= Learning =========
-    AB --> G8{"Gate 8<br/>Evaluation"}
+    G8 --> N[Forecast Evaluation]
 
-    G8 --> AC[Forecast Evaluation]
+    N --> O[Calibration / Performance]
 
-    AC --> AD[Knowledge Update]
+    O --> KB
 
-    AD --> KL
+    L --> KB
+
+    B -. Contradiction / New Information .-> U
+    D -. Outcome / Reassessment .-> Z
 
 ```
 
