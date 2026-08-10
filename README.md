@@ -756,15 +756,179 @@ flowchart TD
 ```
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SECTION 4: AGENT TAXONOMY AND REPOSITORIES
+#  SECTION 4: AGENT TAXONOMY AND REPOSITORIES
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##  4.1 Agent Taxonomy
+
+The system uses agents for tasks that benefit from autonomous reasoning, specialized expertise, iterative information retrieval, or interaction with other system components. Agents should not be introduced merely to reproduce deterministic processing steps.
+
+We can initially distinguish three broad categories:
+
+###  4.1.1 Processing Agents
+
+These agents transform incoming information into structured representations.
+
+Examples:
+- Collection Agent — retrieves information from configured sources.
+- Extraction Agent — extracts claims, observations, entities, and other relevant information from source artifacts.
+- Resolution Agent — determines whether extracted information corresponds to existing entities, events, measurements, or claims.
+
+###  4.1.2 Analytical Agents
+
+These agents reason over the structured information base.
+
+Examples:
+- Political Agent
+- Economic Agent
+- Military Agent
+- Science & Technology Agent
+- Governance Agent
+
+Domain agents are not intended to operate independently as separate knowledge systems. They receive relevant information from the shared information base and produce analyses or candidate claims within their respective domains.
+
+A Synthesis Agent may subsequently combine outputs from multiple domain agents when a problem crosses disciplinary boundaries.
+
+###  4.1.3 Evaluation Agents
+
+These agents challenge, verify, and evaluate system outputs.
+
+Examples:
+Critic Agent — identifies unsupported claims, contradictions, missing evidence, and alternative explanations.
+Forecast Evaluation Agent — compares resolved outcomes with previous forecasts and records their performance.
+
+The exact number and specialization of agents should remain flexible. Agents may be merged, split, or removed as practical experience reveals which tasks actually benefit from specialization.
+
+##  4.2 Repositories
+
+The system maintains structured repositories for the information accumulated throughout its operation.
+
+The initial logical repositories are:
+
+Repository	Purpose
+Source Repository	Information about information sources and their reliability/history
+Source Artifact Repository	Retrieved articles, reports, posts, datasets, and other source materials
+Entity Repository	Persistent entities and their identifiers/aliases
+Event Repository	Past and ongoing events represented by the system
+Measurement Repository	Quantitative observations and time-dependent measurements
+Claim Repository	Source-derived and analytical claims
+Analysis Repository	Analytical records produced by humans and agents
+Forecast Repository	Forecasts, their conditions, horizons, and eventual outcomes
+Evaluation Repository	Forecast evaluations and performance records
+
+These are logical repositories, not necessarily separate databases. Their physical implementation will be determined later according to retrieval, scalability, provenance, and computational requirements.
+
+##  4.3 Shared Information Base
+
+Agents should operate over a shared information base rather than maintaining isolated versions of the world.
+
+The general pattern is:
+
+```mermaid
+flowchart TD
+    A[Source Artifacts] --> B[Processing Agents]
+    B --> C[Structured Information Base]
+
+    C --> D[Domain Agents]
+    D --> E[Analysis Records]
+    E --> F[Critic / Evaluation Agents]
+
+    F --> C
+
+    C --> G[Forecasts]
+    G --> H[Reality]
+    H --> I[New Observations]
+    I --> C
+```
+
+The shared information base allows different agents to work from common source material, Events, Claims, Measurements, previous Analyses, and Forecasts.
+
+At the same time, agents should not have unrestricted authority to modify all information. Provenance and controlled updates should be preserved, particularly for source-derived information, Events, and historical Forecasts.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#  SECTION 5: TECHNOLOGY MAPPING
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+The system is designed around capabilities rather than specific software products. Technology choices should satisfy the architectural requirements while minimizing unnecessary complexity, cost, and maintenance.
 
+The initial principle is:
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SECTION 5: TECHNOLOGY MAPPING
--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+> **Use the simplest technology that adequately performs the required function.**
 
+Technology choices may be replaced as the system grows or as practical experience reveals new requirements.
+
+## 5.1 Technology Requirements
+
+| System Requirement             | Required Capability                                          | Candidate Technologies                             |
+| ------------------------------ | ------------------------------------------------------------ | -------------------------------------------------- |
+| Information collection         | Web, API, RSS, and other source access                       | Python, APIs, RSS, web scraping                    |
+| Source artifact storage        | Persistent storage of retrieved material                     | Local files, object storage                        |
+| Text and document processing   | Parsing, cleaning, transcription, and NLP                    | Python, NLP libraries, LLM APIs                    |
+| Structured extraction          | Extraction of Claims, Entities, Events, and Measurements     | LLMs, structured-output APIs, Python               |
+| Entity and Event resolution    | Matching new information to existing objects                 | Embeddings, similarity search, LLM reasoning       |
+| Structured information storage | Persistent storage and querying of system objects            | SQLite / PostgreSQL                                |
+| Information retrieval          | Search and retrieval of relevant historical information      | SQL, full-text search, embeddings/vector search    |
+| Agent execution                | Coordination of processing, analytical, and evaluation tasks | Python workflows, agent frameworks where justified |
+| Scheduled operation            | Recurring collection and processing                          | Cron, task schedulers                              |
+| Analysis and forecasting       | LLM reasoning and quantitative modelling                     | LLM APIs, Python, statistical/probabilistic models |
+| Verification                   | Criticism, cross-checking, and evaluation                    | LLM-based verification workflows                   |
+| Forecast evaluation            | Comparison of predictions with subsequent outcomes           | Python, database queries                           |
+| Publication                    | Automated delivery of approved outputs                       | Telegram Bot API                                   |
+| Version control                | Tracking code, configuration, and documentation              | Git / GitHub                                       |
+| Reproducible deployment        | Consistent execution environments                            | Virtual environments; Docker when required         |
+
+These technologies are candidates rather than final commitments.
+
+## 5.2 System Layers
+
+The technology stack can be organized into the following functional layers:
+
+```mermaid
+flowchart TD
+    A[Interface & Publication<br/>Telegram / Reports]
+    B[Agent Layer<br/>Processing / Analysis / Evaluation]
+    C[Reasoning Layer<br/>LLMs / NLP / Statistical Models]
+    D[Retrieval Layer<br/>SQL / Search / Embeddings]
+    E[Data Layer<br/>Sources / Claims / Events / Entities / Measurements / Forecasts]
+    F[Collection Layer<br/>APIs / RSS / Web / Files]
+
+    F --> E
+    E --> D
+    D --> C
+    C --> B
+    B --> A
+```
+
+The layers are conceptual rather than necessarily separate software services. A single application may initially perform functions belonging to several layers.
+
+## 5.3 Initial Technology Stack
+
+The first version of the system should aim for a minimal stack capable of supporting the core workflow.
+
+A plausible initial stack is:
+
+```text
+Python
+    +
+Git / GitHub
+    +
+SQLite or PostgreSQL
+    +
+LLM API
+    +
+Python collection and processing libraries
+    +
+Telegram Bot API
+```
+
+Additional technologies should be introduced only when a demonstrated requirement justifies them.
+
+For example:
+
+* **Embeddings/vector search** should be introduced when conventional database retrieval is insufficient.
+* **Docker** should be introduced when deployment or reproducibility becomes difficult without containerization.
+* **Agent frameworks** should be introduced when orchestration complexity exceeds what simple Python workflows can reasonably manage.
+* **Local language models** should be introduced when their cost, privacy, latency, or experimental value justifies the additional infrastructure.
+* **Dedicated graph databases** should be introduced only if relationship-intensive retrieval becomes a demonstrated requirement.
 
 
 
