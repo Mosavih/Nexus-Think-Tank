@@ -245,7 +245,39 @@ Claims should preserve their provenance and distinguish between source claims an
 
 A Claim may support, contradict, describe, or interpret an Event, Measurement, Entity, or another Claim.
 
-###  3.1.6 Analysis Record
+###  3.1.7 Measurement
+
+A Measurement represents a structured quantitative observation associated with an indicator, entity, and time or period.
+
+Examples:
+- Inflation = 42.5%
+- USD/IRR exchange rate = 1,050,000
+- Oil exports = 1.8 million barrels/day
+- Cement price = 95,000 IRR/kg
+- Construction employment = 2.3 million workers
+
+A Measurement should answer:
+- What was measured?
+- What was the value?
+- In what unit?
+- For which entity or indicator?
+- At what time or period?
+- From which source/artifact?
+- How was it obtained?
+
+Potential attributes:
+- ID
+- Indicator
+- Value
+- Unit
+- Entity/subject
+- Measurement time
+- Reference period
+- Source Artifact ID
+- Collection time
+- Quality/status
+
+###  3.1.8 Analysis Record
 
 An Analysis Record represents a structured analytical process conducted by a human or AI system.
 Instead it represents
@@ -269,7 +301,7 @@ Given the available information at this point in time, what did the analyst conc
 
 An Analysis Record must not overwrite Events or Source information. It represents an interpretation of the available information at a particular point in time.
 
-###  3.1.7 Forecast
+###  3.1.9 Forecast
 
 A Forecast is a probabilistic claim concerning a future outcome with an explicit resolution condition.
 
