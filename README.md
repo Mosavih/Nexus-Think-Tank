@@ -3,7 +3,7 @@
 #  SECTION 1: VISION AND INFORMATION FLOW
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-This project aims to develop a semi-automated self-improving system that provides financial, political, military, governance, and technology analyses and forecasts (posts). Relevant data will be extracted and saved in the database in a structured format. Specialized agents will subsequently use the data to provide posts. Each post will be saved in the database with a dedicated identifier. New evidence (data) will validate the previous posts, and their status will be updated, turning them into knowledge. The knowledge will be used to improve the performance of various agents.
+This project aims to develop a semi-automated self-improving system that provides financial, scientific, political, environmental, governance, and technology analyses and forecasts (posts). Relevant data will be extracted and saved in a database. Specialized agents will subsequently use the data for forecasting/analysis. Each post will be saved in the database with a dedicated identifier. New evidence (data) will validate the previous posts, and their status will be updated, turning them into knowledge. The knowledge will be used to improve the performance of the specialized agents.
 
 Reality
 
